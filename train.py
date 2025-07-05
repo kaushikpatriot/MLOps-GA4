@@ -21,7 +21,7 @@ y_test = test.species
 
 mlflow.set_tracking_uri(uri="http://104.154.72.84:8100")
 
-mlflow.set_experiment("MLflow Iris classifier")
+mlflow.set_experiment("MLFlow Iris Classification Experiments")
 
 signature = infer_signature(X_train, y_train)
 
