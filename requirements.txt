@@ -5,3 +5,6 @@ joblib
 dvc
 pytest
 matplotlib
+mlflow
+mlflow[extras] 
+hyperopt
