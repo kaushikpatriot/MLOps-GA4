@@ -1,0 +1,50 @@
+name: Deploy to Staging with Tests
+
+on: 
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  my_job:
+    name: deploy to staging
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3  # Updated to v3
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      
+      - uses: iterative/setup-cml@v2
+      
+      - name: Install dependencies and run tests
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pip install -r requirements.txt
+          python train.py
+          
+          # Run pytest with better output formatting
+          pytest -v -s test.py --tb=short > test_results.txt 2>&1 || echo "Some tests failed"
+          
+          # Create CML report
+          echo '# ML Pipeline Report' > report.md
+          echo '' >> report.md
+          echo '## Training Completed' >> report.md
+          echo '' >> report.md          
+          echo '![Confusion matrix](./plot.png)' >> report.md
+          echo '' >> report.md          
+          echo 'Model training finished successfully.' >> report.md
+          echo '' >> report.md
+          echo '## Test Results' >> report.md
+          echo '```' >> report.md
+          cat test_results.txt >> report.md
+          echo '```' >> report.md
+          
+          # Publish the report
+          cml comment create report.md
