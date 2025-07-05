@@ -19,7 +19,7 @@ y_train = train.species
 X_test = test[['sepal_length','sepal_width','petal_length','petal_width']]
 y_test = test.species
 
-mlflow.set_tracking_uri(uri="http://104.154.72.84:8100")
+mlflow.set_tracking_uri(uri="http://34.123.21.120:8100")
 
 mlflow.set_experiment("MLFlow Iris Classification Experiments")
 
@@ -111,7 +111,7 @@ with mlflow.start_run(run_name="hyperparameter-sweep"):
     # Log optimization results
     mlflow.log_params(
         {
-            "best_max_depth": best_params["max_depth"]
+            "best_max_depth": best_trial["model"].max_depth
         }
     )
     mlflow.log_metrics(
